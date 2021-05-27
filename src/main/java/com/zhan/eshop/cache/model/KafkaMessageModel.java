@@ -1,5 +1,7 @@
 package com.zhan.eshop.cache.model;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class KafkaMessageModel {
+public class KafkaMessageModel implements Serializable {
     private String serviceId;
     private Long Id;
 }

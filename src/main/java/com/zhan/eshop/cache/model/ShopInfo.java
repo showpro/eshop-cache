@@ -7,9 +7,21 @@ package com.zhan.eshop.cache.model;
  */
 public class ShopInfo {
 
+    /**
+     * 店铺id
+     */
     private Long id;
+    /**
+     * 店铺名称
+     */
     private String name;
+    /**
+     * 店铺等级
+     */
     private Integer level;
+    /**
+     * 店铺好评率
+     */
     private Double goodCommentRate;
 
     public Long getId() {

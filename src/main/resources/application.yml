@@ -5,69 +5,67 @@ logging.level.org.springframework.boot.autoconfigure:  debug
 logging.level.com.roncoo.eshop.mapper: debug
 spring:
   datasource:
-    url: jdbc:mysql://196.128.133.130:3306/eshop?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://196.128.133.130:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
-
-  #redis¼¯Èº
+  #redisï¿½ï¿½Èº
   redis:
     cluster:
       nodes:
-        - 196.128.133.133:7001
-        - 196.128.133.133:7002
-        - 196.128.133.128:7003
-        - 196.128.133.128:7004
-        - 196.128.133.129:7005
-        - 196.128.133.129:7006
+        - 192.168.133.133:7001
+        - 192.168.133.133:7002
+        - 192.168.133.128:7003
+        - 192.168.133.128:7004
+        - 192.168.133.129:7005
+        - 192.168.133.129:7006
     database: 0
     timeout: 1000
-
-  #±¾µØ»º´æ
+  #ï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½
   cache:
     type: ehcache
     ehcache:
       config: classpath:ehcache.xml
 
   kafka:
-    #Ö¸¶¨kafka·şÎñÆ÷µØÖ·
-    bootstrap-servers: http://196.128.133.133:9092,http://196.128.133.128:9092,http://196.128.133.129:9092
-    #Éú²úÕß
+    #Ö¸ï¿½ï¿½kafkaï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+    bootstrap-servers: http://192.168.133.133:9092,http://192.168.133.128:9092,http://192.168.133.129:9092
+    #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     producer:
-      # ÖØÊÔ´ÎÊı£¬Ä¬ÈÏInteger.MAX_VALUE
+      # ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½Integer.MAX_VALUE
       retries: 3
-      # ackÓ¦´ğ»úÖÆ£¬Ä¬ÈÏ1£¬¼´Ö»ĞèÒªÈ·ÈÏleaderÊÕµ½ÏûÏ¢
+      # ackÓ¦ï¿½ï¿½ï¿½ï¿½Æ£ï¿½Ä¬ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ÒªÈ·ï¿½ï¿½leaderï¿½Õµï¿½ï¿½ï¿½Ï¢
       acks: all
-      # Í¬Ò»Åú´ÎÄÚ´æ´óĞ¡£¨Ä¬ÈÏ16K£©
+      # Í¬Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ğ¡ï¿½ï¿½Ä¬ï¿½ï¿½16Kï¿½ï¿½
       batch-size: 16384
-      # Éú²úÕßÄÚ´æ»º´æÇø´óĞ¡(32M)
+      # ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´æ»ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡(32M)
       buffer-memory: 33554432
-      # keyºÍvalueµÄĞòÁĞ»¯£¨Ä¬ÈÏ£¬¿ÉÒÔ²»ÉèÖÃ£©
+      # keyï¿½ï¿½valueï¿½ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½ï¿½Ä¬ï¿½Ï£ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½Ã£ï¿½
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: com.roncoo.eshop.cache.serializable.KafkaMessageSerializable
+      value-serializer: com.zhan.eshop.cache.serializable.KafkaMessageSerializable
       #properties:
-        # Ê¹ÓÃ×Ô¶¨ÒåµÄ·ÖÇøÑ¡ÔñÆ÷
+        # Ê¹ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½
         #{partitioner.class: com.msy.kafka.MyPartition, acks: all}
-    #Ïû·ÑÕß
+    #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     consumer:
-      # Ïû·Ñ×é£¬ºÍ topic ÊÇÒ»Ò»¶ÔÓ¦µÄ£¬ÀıÈç£¬topicÀïµÄÒ»¸öÏûÏ¢Ö»ÄÜ±»Ò»¸öÏû·Ñ×éÏû·ÑÒ»´Î£¬Èç¹ûÔÚÒ»¸öÏû·Ñ×éÀïÓĞ¶à¸öÏû·ÑÕß£¬Ôò²ÉÓÃload balancedµÄ·½Ê½Ïû·Ñ£¬Èç¹ûËùÓĞµÄÏû·ÑÕß¶¼²»ÊôÓÚÍ¬Ò»¸öÏû·Ñ×é£¬Ôò¶©ÔÄ¸ÃtopicµÄÏûÏ¢ËùÓĞµÄÏû·ÑÕß¶¼»á½ÓÊÕµ½ÏûÏ¢£¬Ïû·Ñ×éµÄ¸ÅÄîÊÇÎªÁË²¹³ä¶à¸öÏû·ÑÕß¾ºÕù·Ö¸îµÄ´¦ÀíÏûÏ¢
-      # Ïû·ÑÕßÈº×éID£¬·¢²¼-¶©ÔÄÄ£Ê½£¬¼´Èç¹ûÒ»¸öÉú²úÕß£¬¶à¸öÏû·ÑÕß¶¼ÒªÏû·Ñ£¬ÄÇÃ´ĞèÒª¶¨Òå×Ô¼ºµÄÈº×é£¬Í¬Ò»Èº×éÄÚµÄÏû·ÑÕßÖ»ÓĞÒ»¸öÄÜÏû·Ñµ½ÏûÏ¢
+      # ï¿½ï¿½ï¿½ï¿½ï¿½é£¬ï¿½ï¿½ topic ï¿½ï¿½Ò»Ò»ï¿½ï¿½Ó¦ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ç£¬topicï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ï¢Ö»ï¿½Ü±ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½load balancedï¿½Ä·ï¿½Ê½ï¿½ï¿½ï¿½Ñ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é£¬ï¿½ï¿½ï¿½Ä¸ï¿½topicï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ğµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¾ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+      # ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½Òªï¿½ï¿½ï¿½Ñ£ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½Èºï¿½é£¬Í¬Ò»Èºï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½ï¿½ï¿½Ï¢
       group-id: eshop-cache-group
-      # earliest£º´ÓÍ·¿ªÊ¼Ïû·Ñ   latest£º´Ó×îĞÂµÄ¿ªÊ¼Ïû·Ñ   Ä¬ÈÏlatest
+      # earliestï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½   latestï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄ¿ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½   Ä¬ï¿½ï¿½latest
       auto-offset-reset: earliest
       enable-auto-commit: false
-      # keyºÍvalue·´ĞòÁĞ»¯£¨Ä¬ÈÏ£¬¿ÉÒÔ²»ÉèÖÃ£©
+      # keyï¿½ï¿½valueï¿½ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½ï¿½Ä¬ï¿½Ï£ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½Ã£ï¿½
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: com.zhan.eshop.cache.serializable.KafkaMessageDeserializer
       max-poll-records: 20000
-    #¼àÌıÆ÷
+    #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     listener:
-      # Ïû·ÑÕß²¢·¢ÄÜÁ¦
+      # ï¿½ï¿½ï¿½ï¿½ï¿½ß²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       concurrency: 3
-      # ÉèÖÃÊÖ¶¯Ìá½»µÄÊ±ºò£¬ĞèÒªÉèÖÃackMode
+      # ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½á½»ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ackMode
       ack-mode: MANUAL
 
-#topic, Ò²¿ÉÒÔÔÚÄ£°å·¢ËÍµÄÊ±ºòĞ´ÔÚ´úÂëÀï£ºkafkaTemplate.send("testTopic","message");
+#topic, Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½å·¢ï¿½Íµï¿½Ê±ï¿½ï¿½Ğ´ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï£ºkafkaTemplate.send("testTopic","message");
 kafka.eshop.topic: test_topic
 kafka.eshop.cacheTopic: eshop-cache
 

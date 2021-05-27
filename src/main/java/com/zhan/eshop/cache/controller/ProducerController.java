@@ -45,7 +45,7 @@ public class ProducerController {
             @Override
             public void onSuccess(SendResult<String, Object> result) {
                 //TODO 成功业务逻辑
-                System.out.println("onSuccess");
+                System.out.println("=================发送成功回调：onSuccess");
             }
         };
         // 发送失败回调
@@ -53,7 +53,7 @@ public class ProducerController {
             @Override
             public void onFailure(Throwable ex) {
                 //TODO 失败业务逻辑
-                System.out.println("onFailure");
+                System.out.println("=================发送失败回调：onFailure");
             }
         };
 

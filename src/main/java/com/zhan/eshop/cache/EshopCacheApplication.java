@@ -1,6 +1,6 @@
 package com.zhan.eshop.cache;
 
-import com.zhan.eshop.cache.service.MqProducerService;
+//import com.zhan.eshop.cache.service.MqProducerService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
