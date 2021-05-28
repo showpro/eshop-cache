@@ -9,7 +9,7 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
-  #redis��Ⱥ
+  #redis集群
   redis:
     cluster:
       nodes:
@@ -21,51 +21,58 @@ spring:
         - 192.168.133.129:7006
     database: 0
     timeout: 1000
-  #���ػ���
+  # 本地缓存
   cache:
     type: ehcache
     ehcache:
-      config: classpath:ehcache.xml
+      config: classpath:/ehcache.xml
 
   kafka:
-    #ָ��kafka��������ַ
+    ###########【指定 kafka 代理地址，可以多个】###########
     bootstrap-servers: http://192.168.133.133:9092,http://192.168.133.128:9092,http://192.168.133.129:9092
-    #������
+    ###########【初始化生产者配置】###########
     producer:
-      # ���Դ�����Ĭ��Integer.MAX_VALUE
+      # 重试次数，默认Integer.MAX_VALUE
       retries: 3
-      # ackӦ����ƣ�Ĭ��1����ֻ��Ҫȷ��leader�յ���Ϣ
+      # ack应答机制，默认1，即只需要确认leader收到消息
       acks: all
-      # ͬһ�����ڴ��С��Ĭ��16K��
+      # 同一批次内存大小（默认16K）
       batch-size: 16384
-      # �������ڴ滺������С(32M)
+      # 生产者内存缓存区大小(32M)
       buffer-memory: 33554432
-      # key��value�����л���Ĭ�ϣ����Բ����ã�
+      # key和value的序列化（默认为String类型，可以不设置）
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # 如果发送的消息体是一个对象，对象需要序列化
       value-serializer: com.zhan.eshop.cache.serializable.KafkaMessageSerializable
       #properties:
-        # ʹ���Զ���ķ���ѡ����
-        #{partitioner.class: com.msy.kafka.MyPartition, acks: all}
-    #������
+        # 使用自定义的分区选择器
+        #{partitioner.class: com.zhan.kafka.MyPartition, acks: all}
+    ###########【初始化消费者配置】###########
     consumer:
-      # �����飬�� topic ��һһ��Ӧ�ģ����磬topic���һ����Ϣֻ�ܱ�һ������������һ�Σ������һ�����������ж�������ߣ������load balanced�ķ�ʽ���ѣ�������е������߶�������ͬһ�������飬���ĸ�topic����Ϣ���е������߶�����յ���Ϣ��������ĸ�����Ϊ�˲����������߾����ָ�Ĵ�����Ϣ
-      # ������Ⱥ��ID������-����ģʽ�������һ�������ߣ���������߶�Ҫ���ѣ���ô��Ҫ�����Լ���Ⱥ�飬ͬһȺ���ڵ�������ֻ��һ�������ѵ���Ϣ
+      # 默认的消费组ID
       group-id: eshop-cache-group
-      # earliest����ͷ��ʼ����   latest�������µĿ�ʼ����   Ĭ��latest
+      # 当kafka中没有初始offset或offset超出范围时将自动重置offset
+      # earliest:重置为分区中最小的offset;
+      # latest:重置为分区中最新的offset(消费分区中新产生的数据);
+      # none:只要有一个分区不存在已提交的offset,就抛出异常;
       auto-offset-reset: earliest
+      # 是否自动提交offset
       enable-auto-commit: false
-      # key��value�����л���Ĭ�ϣ����Բ����ã�
+      # key和value的反序列化（默认为String类型，可以不设置）
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # 如果消费的消息体是一个对象，对象需要反序列化
       value-deserializer: com.zhan.eshop.cache.serializable.KafkaMessageDeserializer
       max-poll-records: 20000
-    #������
+    #监听
     listener:
-      # �����߲�������
+      # 并发能力
       concurrency: 3
-      # �����ֶ��ύ��ʱ����Ҫ����ackMode
+      # 设置手动提交的时候，需要设置ackMode
       ack-mode: MANUAL
+      # 消费端监听的topic不存在时，项目启动会报错(关掉)
+      missing-topics-fatal: false
 
-#topic, Ҳ������ģ�巢�͵�ʱ��д�ڴ����kafkaTemplate.send("testTopic","message");
+#topic, 也可以在代码中发送消息时写：kafkaTemplate.send("testTopic","message");
 kafka.eshop.topic: test_topic
 kafka.eshop.cacheTopic: eshop-cache
 
