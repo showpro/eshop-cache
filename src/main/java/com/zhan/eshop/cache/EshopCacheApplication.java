@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
  * @author zhanzhan
  */
 @SpringBootApplication
+// mapper 接口类扫描包配置
 @MapperScan("com.zhan.eshop.cache.mapper")
 @EnableCaching
 public class EshopCacheApplication {

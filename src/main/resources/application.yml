@@ -1,14 +1,12 @@
 server:
   port: 8090
-debug: false
-logging.level.org.springframework.boot.autoconfigure:  debug
-logging.level.com.roncoo.eshop.mapper: debug
 spring:
   datasource:
-    url: jdbc:mysql://196.128.133.130:3306/eshop?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.133.130:3306/eshop?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+
   #redis集群
   redis:
     cluster:
@@ -25,7 +23,7 @@ spring:
   cache:
     type: ehcache
     ehcache:
-      config: classpath:/ehcache.xml
+      config: classpath:ehcache.xml
 
   kafka:
     ###########【指定 kafka 代理地址，可以多个】###########
@@ -43,6 +41,7 @@ spring:
       # key和value的序列化（默认为String类型，可以不设置）
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       # 如果发送的消息体是一个对象，对象需要序列化
+      #value-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: com.zhan.eshop.cache.serializable.KafkaMessageSerializable
       #properties:
         # 使用自定义的分区选择器
@@ -61,6 +60,7 @@ spring:
       # key和value的反序列化（默认为String类型，可以不设置）
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       # 如果消费的消息体是一个对象，对象需要反序列化
+      # value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: com.zhan.eshop.cache.serializable.KafkaMessageDeserializer
       max-poll-records: 20000
     #监听
@@ -76,6 +76,5 @@ spring:
 kafka.eshop.topic: test_topic
 kafka.eshop.cacheTopic: eshop-cache
 
-
-
-
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

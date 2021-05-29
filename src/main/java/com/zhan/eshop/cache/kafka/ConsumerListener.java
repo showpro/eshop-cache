@@ -136,8 +136,10 @@ public class ConsumerListener {
 
         String shopInfoJSON = "{\"id\": 1, \"name\": \"小王的手机店\", \"level\": 5, \"goodCommentRate\":0.99}";
         ShopInfo shopInfo = JSONObject.parseObject(shopInfoJSON, ShopInfo.class);
+        //保存到本地缓存
         cacheService.saveShopInfo2LocalCache(shopInfo);
         System.out.println("===================获取刚保存到本地缓存的店铺信息：" + cacheService.getShopInfoFromLocalCache(shopId));
+        //保存到redis分布式缓存
         cacheService.saveShopInfo2ReidsCache(shopInfo);
     }
 
