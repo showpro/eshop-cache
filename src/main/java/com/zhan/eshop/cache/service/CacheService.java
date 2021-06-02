@@ -75,12 +75,12 @@ public interface CacheService {
      * 从redis中获取商品信息
      * @param productId
      */
-    //public ProductInfo getProductInfoFromReidsCache(Long productId);
+    public ProductInfo getProductInfoFromReidsCache(Long productId);
 
     /**
      * 从redis中获取店铺信息
      * @param shopId
      */
-    //public ShopInfo getShopInfoFromReidsCache(Long shopId);
+    public ShopInfo getShopInfoFromReidsCache(Long shopId);
 
 }

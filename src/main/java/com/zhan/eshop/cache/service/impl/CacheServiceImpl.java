@@ -133,21 +133,29 @@ public class CacheServiceImpl implements CacheService {
         command.execute();*/
     }
 
-    // /**
-    //  * 从redis中获取商品信息
-    //  * @param productInfo
-    //  */
-    // public ProductInfo getProductInfoFromReidsCache(Long productId) {
-    //     GetProductInfoFromReidsCacheCommand command = new GetProductInfoFromReidsCacheCommand(productId);
-    //     return command.execute();
-    // }
+    /**
+     * 从redis中获取商品信息
+     * @param productId
+     */
+    @Override
+    public ProductInfo getProductInfoFromReidsCache(Long productId) {
+        String key = "product_info_" + productId;
+        String json = redisTemplate.opsForValue().get(key);
+        return JSONObject.parseObject(json, ProductInfo.class);
+/*        GetProductInfoFromReidsCacheCommand command = new GetProductInfoFromReidsCacheCommand(productId);
+        return command.execute();*/
+    }
 
-    // /**
-    //  * 从redis中获取店铺信息
-    //  * @param productInfo
-    //  */
-    // public ShopInfo getShopInfoFromReidsCache(Long shopId) {
-    //     GetShopInfoFromReidsCacheCommand command = new GetShopInfoFromReidsCacheCommand(shopId);
-    //     return command.execute();
-    // }
+    /**
+     * 从redis中获取店铺信息
+     * @param shopId
+     */
+    @Override
+    public ShopInfo getShopInfoFromReidsCache(Long shopId) {
+        String key = "shop_info_" + shopId;
+        String json = redisTemplate.opsForValue().get(key);
+        return JSONObject.parseObject(json, ShopInfo.class);
+/*        GetShopInfoFromReidsCacheCommand command = new GetShopInfoFromReidsCacheCommand(shopId);
+        return command.execute();*/
+    }
 }
