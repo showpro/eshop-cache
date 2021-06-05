@@ -1,5 +1,8 @@
 package com.zhan.eshop.cache.kafka;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
@@ -11,6 +14,7 @@ import com.zhan.eshop.cache.model.KafkaMessageModel;
 import com.zhan.eshop.cache.model.ProductInfo;
 import com.zhan.eshop.cache.model.ShopInfo;
 import com.zhan.eshop.cache.service.CacheService;
+import com.zhan.eshop.cache.zk.ZooKeeperSession;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class ConsumerListener {
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private CacheService cacheService;
@@ -71,14 +77,14 @@ public class ConsumerListener {
 
         //假设去查询了数据库，获取到了productId=1的商品信息
         String productInfoJSON
-            = "{\"id\": 5, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\"}";
+            = "{\"id\": 6, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2021-06-03 12:00:00\"}";
         ProductInfo productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);
-/*
+
         // 加代码，在将数据直接写入redis缓存之前，应该先获取一个zk的分布式锁
         ZooKeeperSession zkSession = ZooKeeperSession.getInstance();
         zkSession.acquireDistributedLock(productId);
 
-        // 获取到了锁
+        // 代码走到这里，说明获取到了锁
         // 先从redis中获取数据
         ProductInfo existedProductInfo = cacheService.getProductInfoFromReidsCache(productId);
 
@@ -91,6 +97,7 @@ public class ConsumerListener {
                 if (date.before(existedDate)) {
                     System.out.println("current date[" + productInfo.getModifiedTime() + "] is before existed date["
                         + existedProductInfo.getModifiedTime() + "]");
+                    // 旧，则结束；新，则往下走，更新缓存进行覆盖
                     return;
                 }
             } catch (Exception e) {
@@ -103,10 +110,11 @@ public class ConsumerListener {
         }
 
         try {
+            // 休眠10秒
             Thread.sleep(10 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
 
         /**
          * ehcache 和 redis各存一份
@@ -115,9 +123,8 @@ public class ConsumerListener {
         System.out.println(
             "===================获取刚保存到本地缓存的商品信息：" + cacheService.getProductInfoFromLocalCache(productId));
         cacheService.saveProductInfo2ReidsCache(productInfo);
-/*
         // 释放分布式锁
-        zkSession.releaseDistributedLock(productId);*/
+        zkSession.releaseDistributedLock(productId);
     }
 
     /**

@@ -31,7 +31,7 @@ public class ProducerController {
     @GetMapping("/sendProduct")
     public String sendProductMsg() throws JsonProcessingException {
         KafkaMessageModel kafkaMessage = new KafkaMessageModel();
-        kafkaMessage.setId(5L);
+        kafkaMessage.setId(6L);
         kafkaMessage.setServiceId("productInfoService");
 
         // 使用kafka模板发送信息

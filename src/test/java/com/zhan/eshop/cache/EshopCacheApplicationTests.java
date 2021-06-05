@@ -2,6 +2,8 @@ package com.zhan.eshop.cache;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zhan.eshop.cache.model.KafkaMessageModel;
+import com.zhan.eshop.cache.zk.ZooKeeperSession;
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +30,11 @@ class EshopCacheApplicationTests {
         kafkaTemplate.send("test", kafkaMessage); //使用kafka模板发送信息
         String res = "消息:【" + kafkaMessage.toString() + "】发送成功 SUCCESS !";
         log.info(res);
+    }
+
+    @Test
+    public void zooKeeperTest() {
+        ZooKeeperSession zkSession = ZooKeeperSession.getInstance();
     }
 
 }
