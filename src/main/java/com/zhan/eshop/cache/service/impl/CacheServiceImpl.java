@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhan.eshop.cache.hystrix.command.GetProductInfoFromReidsCacheCommand;
+import com.zhan.eshop.cache.hystrix.command.GetShopInfoFromReidsCacheCommand;
+import com.zhan.eshop.cache.hystrix.command.SaveProductInfo2ReidsCacheCommand;
+import com.zhan.eshop.cache.hystrix.command.SaveShopInfo2ReidsCacheCommand;
 import com.zhan.eshop.cache.model.ProductInfo;
 import com.zhan.eshop.cache.model.ShopInfo;
 import com.zhan.eshop.cache.service.CacheService;
@@ -112,11 +116,12 @@ public class CacheServiceImpl implements CacheService {
      */
     @Override
     public void saveProductInfo2ReidsCache(ProductInfo productInfo) throws JsonProcessingException {
-        String key = "product_info_" + productInfo.getId();
+/*        String key = "product_info_" + productInfo.getId();
         ObjectMapper mapper = new ObjectMapper();
-        redisTemplate.opsForValue().set(key, mapper.writeValueAsString(productInfo));
-/*        SaveProductInfo2ReidsCacheCommand command = new SaveProductInfo2ReidsCacheCommand(productInfo);
-        command.execute();*/
+        redisTemplate.opsForValue().set(key, mapper.writeValueAsString(productInfo));*/
+        // 做资源隔离，确保说，redis的访问只能在固定的线程池内的资源来进行访问
+        SaveProductInfo2ReidsCacheCommand command = new SaveProductInfo2ReidsCacheCommand(productInfo);
+        command.execute();
     }
 
     /**
@@ -126,11 +131,12 @@ public class CacheServiceImpl implements CacheService {
      */
     @Override
     public void saveShopInfo2ReidsCache(ShopInfo shopInfo) throws JsonProcessingException {
-        String key = "shop_info_" + shopInfo.getId();
+/*        String key = "shop_info_" + shopInfo.getId();
         ObjectMapper mapper = new ObjectMapper();
-        redisTemplate.opsForValue().set(key, mapper.writeValueAsString(shopInfo));
-/*        SaveShopInfo2ReidsCacheCommand command = new SaveShopInfo2ReidsCacheCommand(shopInfo);
-        command.execute();*/
+        redisTemplate.opsForValue().set(key, mapper.writeValueAsString(shopInfo));*/
+        // 做资源隔离，确保说，redis的访问只能在固定的线程池内的资源来进行访问
+        SaveShopInfo2ReidsCacheCommand command = new SaveShopInfo2ReidsCacheCommand(shopInfo);
+        command.execute();
     }
 
     /**
@@ -139,14 +145,14 @@ public class CacheServiceImpl implements CacheService {
      */
     @Override
     public ProductInfo getProductInfoFromReidsCache(Long productId) {
-        String key = "product_info_" + productId;
+/*        String key = "product_info_" + productId;
         String json = redisTemplate.opsForValue().get(key);
         if(json != null) {
             return JSONObject.parseObject(json, ProductInfo.class);
         }
-        return null;
-/*        GetProductInfoFromReidsCacheCommand command = new GetProductInfoFromReidsCacheCommand(productId);
-        return command.execute();*/
+        return null;*/
+        GetProductInfoFromReidsCacheCommand command = new GetProductInfoFromReidsCacheCommand(productId);
+        return command.execute();
     }
 
     /**
@@ -155,13 +161,13 @@ public class CacheServiceImpl implements CacheService {
      */
     @Override
     public ShopInfo getShopInfoFromReidsCache(Long shopId) {
-        String key = "shop_info_" + shopId;
+/*        String key = "shop_info_" + shopId;
         String json = redisTemplate.opsForValue().get(key);
         if(json != null) {
             return JSONObject.parseObject(json, ShopInfo.class);
         }
-        return null;
-/*        GetShopInfoFromReidsCacheCommand command = new GetShopInfoFromReidsCacheCommand(shopId);
-        return command.execute();*/
+        return null;*/
+        GetShopInfoFromReidsCacheCommand command = new GetShopInfoFromReidsCacheCommand(shopId);
+        return command.execute();
     }
 }

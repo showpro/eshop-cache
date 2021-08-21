@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zhan.eshop.cache.hystrix.command.GetProductInfoCommand;
 import com.zhan.eshop.cache.model.ProductInfo;
 import com.zhan.eshop.cache.model.ShopInfo;
 import com.zhan.eshop.cache.prewarm.CachePrewarmThread;
@@ -79,14 +80,13 @@ public class CacheController {
 
         if(productInfo == null) {
             // 3、就需要从数据源重新拉去数据，重建缓存，但是这里先不讲
-/*            GetProductInfoCommand command = new GetProductInfoCommand(productId);
-            productInfo = command.execute();*/
+            GetProductInfoCommand command = new GetProductInfoCommand(productId);
+            productInfo = command.execute();
 
-            // 写死，将数据推送到一个内存队列中
-            String productInfoJSON
+            // 将数据推送到一个内存队列中
+/*            String productInfoJSON
                 = "{\"id\": "+ productId +", \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2021-06-07 21:57:00\"}";
-            productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);
-
+            productInfo = JSONObject.parseObject(productInfoJSON, ProductInfo.class);*/
             RebuildCacheQueue rebuildCacheQueue = RebuildCacheQueue.getInstance();
             rebuildCacheQueue.putProductInfo(productInfo);
         }
